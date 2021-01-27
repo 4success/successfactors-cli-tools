@@ -1,7 +1,7 @@
 {
-  "name": "download-fotos-successfactors",
+  "name": "@4success/successfactors-cli-tools",
   "version": "1.0.0",
-  "description": "Script para baixar fotos do SuccessFactors",
+  "description": "Ferramentas CLI SuccessFactors",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -12,7 +12,15 @@
   },
   "scripts": {
     "execute-ts": "node_modules/.bin/ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json"
   },
   "directories": {
     "test": "src/__tests__"
