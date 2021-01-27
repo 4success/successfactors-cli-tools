@@ -4,10 +4,15 @@ Kit de ferramentas conectadas com a API do SuccessFactors para realizar operaç�
 
 Versão testada: NodeJS v12.18.2
 
-## Instruções para instalação / execução
+## Utilização
 
-* Copiar o arquivo `.env.example` para o arquivo `.env`
-* Preencher as variáveis de ambiente no arquivo `.env` (utilizar tabela abaixo para referência)
+* Executar `npm install -g @4success/successfactors-cli-tools` para instalar.
+* Abrir um terminal e testar se o comando está disponível com `4s-sf-tools help`
+* Fazer o login com `4s-sf-tools login`. Tenha em mãos seu companyId, usuário e senha para autenticar na API OData.
+* Para baixar fotos, utilize `4s-sf-tools download-profile-pictures` e siga as instruções.
+
+## Instruções para instalação / execução em tempo de projeto
+
 * Executar `yarn install `ou `npm install` - para instalar as dependências
 * Executar `yarn run execute-ts help` ou  `npm run execute-ts help` - para ver os comandos disponíveis
 * Executar `yarn run execute-ts login` ou  `npm run execute-ts login` - para fazer login
