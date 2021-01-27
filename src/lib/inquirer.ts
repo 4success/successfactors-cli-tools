@@ -18,7 +18,7 @@ export default {
                 name: 'path',
                 type: 'input',
                 message: 'Qual será o diretório que as fotos deverão ser salvas?',
-                validate: function (value: string) {
+                validate: (value: string) => {
                     if (value.length) {
                         return true;
                     } else {
@@ -58,7 +58,7 @@ export default {
                     },
                 ],
                 message: 'Selecione seu datacenter (URL):',
-                validate: function (value: string) {
+                validate: (value: string) => {
                     if (value.length) {
                         return true;
                     } else {
@@ -70,7 +70,7 @@ export default {
                 name: 'companyId',
                 type: 'input',
                 message: 'Entre com o seu código de empresa (companyId) do SucessFactors:',
-                validate: function (value: string) {
+                validate: (value: string) => {
                     if (value.length) {
                         return true;
                     } else {
@@ -82,7 +82,7 @@ export default {
                 name: 'username',
                 type: 'input',
                 message: 'Entre com o usuário (case-sensitive) que será usado na conexão:',
-                validate: function (value: string) {
+                validate: (value: string) => {
                     if (value.length) {
                         return true;
                     } else {
@@ -94,7 +94,7 @@ export default {
                 name: 'password',
                 type: 'password',
                 message: 'Entre com a sua senha:',
-                validate: function (value: string) {
+                validate: (value: string) => {
                     if (value.length) {
                         return true;
                     } else {

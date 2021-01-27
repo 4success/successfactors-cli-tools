@@ -7,9 +7,6 @@ import logout from "./commands/logout";
 import loginCheck from "./commands/loginCheck";
 import downloadProfilePictures from "./commands/downloadProfilePictures";
 
-const OS = require('os')
-process.env.UV_THREADPOOL_SIZE = OS.cpus().length
-
 const parseArgs = require('minimist')(process.argv.slice(2));
 
 dotenv.config({

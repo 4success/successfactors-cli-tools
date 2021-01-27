@@ -18,6 +18,13 @@ type UserBasicData = {
     defaultFullName: string;
 }
 
+interface UserBasicDataODataResponse {
+    d: {
+        results: UserBasicData[];
+        __next?: string;
+    };
+}
+
 interface CsvOutput extends UserBasicData {
     photoExists: boolean
     photoLastModifiedDate: string | null;
@@ -63,7 +70,7 @@ export default class SuccessFactors {
     }
 
     private static decodeBase64Image(mimeType: string, dataString: string): Base64ImageDecodeResponse {
-        const response: Base64ImageDecodeResponse = <Base64ImageDecodeResponse>{};
+        const response: Base64ImageDecodeResponse = {} as Base64ImageDecodeResponse;
         response.type = mimeType;
         response.data = Buffer.from(dataString, 'base64');
 
@@ -75,7 +82,7 @@ export default class SuccessFactors {
 
         const options = regex.exec(odataDate);
         if (options && options.length > 0) {
-            return moment(parseInt(options[0].split('+')[0]));
+            return moment(parseInt(options[0].split('+')[0], 10));
         }
         return null;
     }
@@ -185,12 +192,11 @@ export default class SuccessFactors {
 
         const packageSize = 1000;
         let pageCounter = 1;
-        let totalPages = Math.round(users.length / packageSize);
+        const totalPages = Math.round(users.length / packageSize);
         while (users.length) {
             const promises = [];
             const chunkedUsers = users.splice(0, packageSize);
-            for (let i = 0; i < chunkedUsers.length; i++) {
-                let user = chunkedUsers[i];
+            for (const user of chunkedUsers) {
                 promises.push(this.saveUserPhoto(user, `${execFolder}/photos`));
             }
 
@@ -265,7 +271,7 @@ export default class SuccessFactors {
         console.log(chalk.whiteBright(`Contando usuários ativos...`));
 
         const countTotalUsersResponse = await q.resource('User/$count').filter(`status eq 't'`).get();
-        const countTotalUsers = parseInt(countTotalUsersResponse.toJSON().body);
+        const countTotalUsers = parseInt(countTotalUsersResponse.toJSON().body, 10);
         console.log(chalk.whiteBright(`Total de usuários ativos: ${countTotalUsers}`));
 
         const status = new Spinner('Buscando dados dos usuários...');
@@ -276,7 +282,7 @@ export default class SuccessFactors {
         const totalPages = Math.round(countTotalUsers / 1000);
         let nextUrl: string | null = null;
         do {
-            let oDataResponse: any;
+            let oDataResponse: UserBasicDataODataResponse;
             status.message(`Buscando página ${(pageCounter)} de ${totalPages}...`);
 
             if (!nextUrl) {
@@ -296,14 +302,14 @@ export default class SuccessFactors {
                 oDataResponse = req.data;
             }
 
-            for (let i = 0; i < oDataResponse.d.results.length; i++) {
-                const result = oDataResponse.d.results[i];
+            for (const result of oDataResponse.d.results) {
                 users.push({
                     userId: result.userId,
                     username: result.username,
                     defaultFullName: result.defaultFullName
                 });
             }
+
             if (typeof oDataResponse.d['__next'] === 'undefined' || !oDataResponse.d['__next']) {
                 break;
             }
