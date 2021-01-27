@@ -20,7 +20,7 @@ type UserBasicData = {
 
 interface CsvOutput extends UserBasicData {
     photoExists: boolean
-    photoLastModifiedDate?: string;
+    photoLastModifiedDate: string | null;
 }
 
 interface Base64ImageDecodeResponse {
@@ -220,21 +220,6 @@ export default class SuccessFactors {
     private async saveUserPhoto(user: UserBasicData, folderToSaveImages: string): Promise<CsvOutput> {
         const defaultTimeout = 10 * 1000;
         try {
-            // const CancelToken = axios.CancelToken;
-            // const source = CancelToken.source();
-            // const timeout = setTimeout(() => source.cancel('Timeout'), defaultTimeout);
-            //
-            // const res = await axios.get(`${this.credentials.apiHost}/odata/v2/Photo(photoType=1,userId='${user.userId}')`, {
-            //     cancelToken: source.token,
-            //     auth: {
-            //         username: `${this.credentials.username}@${this.credentials.companyId}`,
-            //         password: this.credentials.password as string
-            //     },
-            //     timeout: defaultTimeout
-            // }).catch( error => {
-            //     throw new Error( `Failed GET request for ${ user.username }` );
-            // });
-
             const auth = 'Basic ' + Buffer.from(`${this.credentials.username}@${this.credentials.companyId}:${this.credentials.password}`).toString('base64');
             const res = await got(`${this.credentials.apiHost}/odata/v2/Photo(photoType=1,userId='${user.userId}')`, {
                 headers: {
@@ -254,12 +239,13 @@ export default class SuccessFactors {
             return {
                 ...user,
                 photoExists: true,
-                photoLastModifiedDate: lastModifiedDate ? lastModifiedDate.toISOString() : undefined
+                photoLastModifiedDate: lastModifiedDate ? lastModifiedDate.toISOString() : null
             }
         } catch (e) {
             return {
                 ...user,
                 photoExists: false,
+                photoLastModifiedDate: null
             };
         }
     }
