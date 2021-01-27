@@ -239,7 +239,7 @@ export default class SuccessFactors {
             return {
                 ...user,
                 photoExists: true,
-                photoLastModifiedDate: lastModifiedDate ? lastModifiedDate.toISOString() : null
+                photoLastModifiedDate: lastModifiedDate ? lastModifiedDate.format('YYYY-MM-DD HH:mm:ss') : null
             }
         } catch (e) {
             return {
